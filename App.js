@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Store from './src/store';
 import HomeStack from './src/HomeStack'
+import AppStyles from './src/AppStyles';
 
 const Stack = createNativeStackNavigator();
 
@@ -11,7 +12,7 @@ export default function App() {
   LogBox.ignoreAllLogs();
   return (
     <Store>
-      <StatusBar backgroundColor={"white"} />
+      <StatusBar backgroundColor={AppStyles.primary} />
       <NavigationContainer>
       <Stack.Navigator>
       <Stack.Screen name="HomeStack" component={HomeStack} options={{headerShown:false}} />

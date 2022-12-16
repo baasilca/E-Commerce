@@ -1,15 +1,15 @@
 {
   "expo": {
-    "name": "credot_eCommerce",
+    "name": "E-Commerce",
     "slug": "credot_eCommerce",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/logo.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/splash-logo.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#26af4c"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
