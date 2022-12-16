@@ -1,19 +1,23 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { View, Text, TouchableOpacity, StyleSheet, Image, FlatList } from 'react-native'
-import { Divider, List, Card, IconButton, Avatar } from 'react-native-paper';
+import { Divider, List, Card, IconButton, Avatar, Button } from 'react-native-paper';
 import Ionicons from "react-native-vector-icons/Ionicons";
+import * as Animatable from 'react-native-animatable';
 import dummyDB from '../../../DummyDatas';
 import { Context } from '../../store';
+import AppStyles from '../../AppStyles';
 
 export default function index(props) {
 
   const [state, dispatch] = useContext(Context);
-  const [selectedCategoryResponse, setSelectedCategoryResponse] = useState(null);
+  const [selectedCategoryResponse, setSelectedCategoryResponse] = useState(1);
   const [selectedProductResponse, setSelectedProductResponse] = useState(null);
+  const [listProducts, setListProducts] = useState(dummyDB.rice);
+  const [orderTotal, setOrderTotal] = useState(null);
 
-  // useEffect(() => {
-  //   console.log("__________", state);
-  // }, [state])
+  useEffect(() => {
+    setOrderTotal(state.cart.reduce((acc, curr) => acc + (curr.price_for_calculations * curr.qty), 0))
+  }, [state])
 
   const add_to_cart = (item) => {
     dispatch({ type: 'ADD_TO_CART', payload: item });
@@ -24,7 +28,7 @@ export default function index(props) {
   }
 
   const change_cart_qty = (item, count) => {
-    dispatch({ type: 'CHANGE_CART_QTY', payload: { id: item.id, qty: count} });
+    dispatch({ type: 'CHANGE_CART_QTY', payload: { id: item.id, qty: count } });
   }
 
   const renderOfferCards = ({ item, index }) => (
@@ -37,7 +41,7 @@ export default function index(props) {
       left={(props) => (
         <Image
           source={item.icon}
-          style={{ width: 30, height: 30, resizeMode: "contain", tintColor: "green" }}
+          style={{ width: 30, height: 30, resizeMode: "contain", tintColor: AppStyles.primary }}
         />
       )}
     />
@@ -51,18 +55,20 @@ export default function index(props) {
           padding: 5,
           margin: 5,
           borderColor:
-            item.id === selectedProductResponse ? "green" : "#fff",
+            item.id === selectedProductResponse ? AppStyles.primary : "#fff",
           borderWidth: 1,
         }}
         onPress={() => { setSelectedProductResponse(item.id) }}
       >
         <View style={{ flexDirection: 'row' }}>
+          <View style={{}}>
           <Image
             source={item.image}
-            style={{ width: 100, height: 100, resizeMode: "contain", borderRadius: 10 }}
+            style={{ width: 100, height: 100, resizeMode: "contain", borderRadius: 10, }}
           />
+          </View>
           <View style={{ left: 10 }}>
-            <Text style={{ fontSize: 16 }}>{item.item_name}</Text>
+            <Text style={{ fontSize: 16}}>{item.item_name}</Text>
             <View style={{ flexDirection: 'row' }}>
               <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{item.sale_price}</Text>
               {item.offer ?
@@ -76,11 +82,11 @@ export default function index(props) {
                 <View />
               }
             </View>
-            <View style={{ backgroundColor: "#f0f0f0", flexDirection: "row", minWidth: "40%", top: 5, borderRadius: 5 }}>
+            <View style={{ backgroundColor: "#f0f0f0", flexDirection: "row", minWidth: "65%", top: 5, borderRadius: 5 }}>
               <View style={{ flex: 1 }}>
                 <IconButton
                   icon="minus"
-                  iconColor={"green"}
+                  iconColor={AppStyles.primary}
                   backgroundColor="#fff"
                   size={20}
                   style={{ width: 30, height: 30, borderRadius: 5, flex: 1 }}
@@ -97,7 +103,7 @@ export default function index(props) {
               <View style={{ flex: 0 }}>
                 <IconButton
                   icon="plus"
-                  iconColor={"green"}
+                  iconColor={AppStyles.primary}
                   backgroundColor="#fff"
                   size={20}
                   style={{ width: 30, height: 30, borderRadius: 5 }}
@@ -133,7 +139,7 @@ export default function index(props) {
           <List.Icon
             {...props}
             icon="map-marker-outline"
-            color={"green"}
+            color={AppStyles.primary}
           />
         )}
       />
@@ -172,10 +178,25 @@ export default function index(props) {
                   backgroundColor: "#fff",
                   padding: 5, margin: 5,
                   borderColor:
-                    item.id === selectedCategoryResponse ? "green" : "#fff",
+                    item.id === selectedCategoryResponse ? AppStyles.primary : "#fff",
                   borderWidth: 1,
                 }}
-                onPress={() => { setSelectedCategoryResponse(item.id) }}
+                onPress={() => {
+
+                  setListProducts(
+                    item.id === 1 ?
+                      dummyDB.rice :
+                      item.id === 2 ?
+                        dummyDB.tea :
+                        item.id === 3 ?
+                          dummyDB.drinks :
+                          item.id === 4 ?
+                            dummyDB.others : dummyDB.rice
+                  )
+
+                  setSelectedCategoryResponse(item.id)
+
+                }}
               >
                 <Image
                   source={item.image}
@@ -188,28 +209,67 @@ export default function index(props) {
         }
       </View>
       <FlatList
-        data={dummyDB.rice}
+        data={listProducts}
         renderItem={renderProducts}
         keyExtractor={(item) => `${item.id}`}
-      />
-      <TouchableOpacity style={{
-        position: 'absolute',
-        bottom: 10,
-        right: 10,
-      }}
-        onPress={() => {
-          props.navigation.navigate("Cart")
+        contentContainerStyle={{paddingBottom:70}}
+        ListFooterComponent={()=>{
+          return(
+            <Text style={{alignSelf:'center',opacity:0.4}}>No more data</Text>
+          )
         }}
-      >
+      />
 
-        <IconButton
-          icon="cart-outline"
-          iconColor={"white"}
-          backgroundColor="green"
-          size={25}
-          style={{ width: 60, height: 60, borderRadius: 30 }}
-        />
-      </TouchableOpacity>
+      {state.cart.length ?
+        <Animatable.View
+          animation='zoomIn'
+          duration={1500}>
+          <View style={[styles.triangle]} />
+          <View style={styles.Box}>
+            <View style={{ flexDirection: 'row' }}>
+              <View style={{ flex: 1, justifyContent: "center" }}>
+                <Text style={{ color: "#fff", fontSize: 17 }}>{state.cart.length} Items</Text>
+                <Text style={{ color: "#fff", fontSize: 17 }}>₹{orderTotal}</Text>
+              </View>
+
+              <Card onPress={() => { props.navigation.navigate("Cart") }} style={{ alignSelf: 'flex-end', backgroundColor: "#fff", borderRadius: 10 }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', padding: 2 }}>
+                  <Text style={{ color: "#000", fontSize: 17, left: 10 }}>Checkout</Text>
+                  <IconButton
+                    icon="cart-outline"
+                    iconColor={AppStyles.primary}
+                    size={25}
+                    style={{ width: 60, height: 30, borderRadius: 30 }}
+                  />
+                </View>
+              </Card>
+            </View>
+          </View>
+        </Animatable.View>
+        :
+        <TouchableOpacity style={{
+          position: 'absolute',
+          bottom: 10,
+          right: 10,
+        }}
+          onPress={() => {
+            props.navigation.navigate("Cart")
+          }}
+        >
+          <Animatable.View
+            animation='fadeInLeft'
+            duration={1500}>
+            <IconButton
+              icon="cart-outline"
+              iconColor={"white"}
+              backgroundColor={AppStyles.primary}
+              size={25}
+              style={{ width: 60, height: 60, borderRadius: 30 }}
+            />
+          </Animatable.View>
+        </TouchableOpacity>
+      }
+
 
     </View>
   )
@@ -230,5 +290,37 @@ const styles = StyleSheet.create({
     height: 70,
     resizeMode: "contain",
     borderRadius: 10
-  }
+  },
+  Box: {
+    position: "absolute",
+    bottom: 10,
+    // right: 10,
+    // marginTop: 30,
+    // flexDirection: "row",
+    backgroundColor: "#fff",
+    width: "90%",
+    alignSelf: "center",
+    borderRadius: 10,
+    padding: 12,
+    shadowColor: "#ccc",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    elevation: 15,
+    backgroundColor: AppStyles.primary
+  },
+  triangle: {
+    bottom: 10,
+    position: "absolute",
+    backgroundColor: "transparent",
+    borderStyle: "solid",
+    height: 20,
+    borderLeftWidth: 60,
+    borderRightWidth: 60,
+    borderBottomWidth: 85,
+    borderLeftColor: "transparent",
+    borderRightColor: "transparent",
+    borderBottomColor: AppStyles.primary,
+    alignSelf: "center"
+  },
 });

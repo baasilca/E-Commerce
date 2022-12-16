@@ -5,15 +5,10 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Ionicons from "react-native-vector-icons/Ionicons";
 import _ from "lodash";
 
-import LoginScreen from '../Screens/Login';
+import Login from '../Screens/Login';
 import Dashboard from "../Screens/Dashboard";
 import Cart from "../Screens/Cart"
-
-
-
-
-
-
+import AppStyles from "../AppStyles";
 
 import { Context } from "../store";
 const Stack = createNativeStackNavigator();
@@ -34,12 +29,11 @@ function App(props) {
   }
 
   useEffect(() => {
+    // AsyncStorage.removeItem("sessionData");
     AsyncStorage.getItem('sessionData', (err, result) => {
       if (
         result &&
-        _.isEmpty(result) === false &&
-        JSON.parse(result) &&
-        JSON.parse(result).userId
+        _.isEmpty(result) === false
       ) {
         setIsLoggedin(true);
       } else {
@@ -57,7 +51,6 @@ function App(props) {
   }, [state.sessionData]);
 
 
-
   setTimeout(() => {
     setAppLoaded(true);
   }, 2000);
@@ -65,7 +58,7 @@ function App(props) {
   return (
     <Stack.Navigator>
       <>
-        {/* {!appLoaded && (
+        {!appLoaded && (
           <Stack.Screen
             name="DummyLoader"
             options={{ headerShown: false }}
@@ -77,12 +70,12 @@ function App(props) {
         {!isLoggedin && (
           <Stack.Screen
             name="Login"
-            component={LoginScreen}
+            component={Login}
             options={{ headerShown: false }}
           />
-        )} */}
+        )}
 
-        {/* {isLoggedin && ( */}
+        {isLoggedin && (
           <>
             <Stack.Screen
               name="Dashboard"
@@ -108,14 +101,14 @@ function App(props) {
               options={{
                 title: "Your order",
                 headerStyle: {
-                  backgroundColor: "green",
+                  backgroundColor:AppStyles.primary,
                 },
                 headerTintColor: "#fff",
               }}
             />
           </>
-        {/* )
-        } */}
+        )
+        } 
       </>
     </Stack.Navigator >
   );

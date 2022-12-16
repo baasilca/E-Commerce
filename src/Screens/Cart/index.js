@@ -4,7 +4,7 @@ import { Divider, List, Card, IconButton, Button, Checkbox, } from 'react-native
 import Ionicons from "react-native-vector-icons/Ionicons";
 import dummyDB from '../../../DummyDatas';
 import { Context } from '../../store';
-
+import AppStyles from '../../AppStyles';
 export default function index() {
 
   const [state, dispatch] = useContext(Context);
@@ -16,6 +16,7 @@ export default function index() {
   const [checked, setChecked] = useState(false);
   const [orderTotal, setOrderTotal] = useState(null);
   const [deliveryFee, setDeliveryFee] = useState(20);
+  const recommended = dummyDB.others.concat(dummyDB.tea, dummyDB.drinks, dummyDB.rice)
 
   const add_to_cart = (item) => {
     dispatch({ type: 'ADD_TO_CART', payload: item });
@@ -34,15 +35,23 @@ export default function index() {
     setOrderTotal(state.cart.reduce((acc,curr)=>acc + (curr.price_for_calculations * curr.qty ),0))
   }, [state])
 
+  useEffect(() => {
+    if(orderTotal === 0){
+      setDeliveryFee(0)
+    }else{
+      setDeliveryFee(20)
+    }
+  }, [orderTotal])
+
   const DeliveryType = () => {
     return (
       <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-        <Card style={[styles.deliveryType, { borderColor: selectedDeliveryTypeResponse === 1 ? "green" : "#fff" }]} onPress={() => { setSelectedDeliveryTypeResponse(1) }}>
-          <Ionicons name="ios-flash-outline" size={25} style={{ alignSelf: 'center' }} color={selectedDeliveryTypeResponse === 1 ? "green" : "#bababa"} />
+        <Card style={[styles.deliveryType, { borderColor: selectedDeliveryTypeResponse === 1 ? AppStyles.primary : "#fff" }]} onPress={() => { setSelectedDeliveryTypeResponse(1) }}>
+          <Ionicons name="ios-flash-outline" size={25} style={{ alignSelf: 'center' }} color={selectedDeliveryTypeResponse === 1 ? AppStyles.primary : "#bababa"} />
           <Text style={{ alignSelf: 'center' }}>Instant delivery</Text>
         </Card>
-        <Card style={[styles.deliveryType, { borderColor: selectedDeliveryTypeResponse === 2 ? "green" : "#fff" }]} onPress={() => { setSelectedDeliveryTypeResponse(2) }}>
-          <Ionicons name="time-outline" size={25} style={{ alignSelf: 'center' }} color={selectedDeliveryTypeResponse === 2 ? "green" : "#bababa"} />
+        <Card style={[styles.deliveryType, { borderColor: selectedDeliveryTypeResponse === 2 ? AppStyles.primary : "#fff" }]} onPress={() => { setSelectedDeliveryTypeResponse(2) }}>
+          <Ionicons name="time-outline" size={25} style={{ alignSelf: 'center' }} color={selectedDeliveryTypeResponse === 2 ? AppStyles.primary : "#bababa"} />
           <Text style={{ alignSelf: 'center' }}>Scheduled delivery</Text>
         </Card>
       </View>
@@ -51,10 +60,10 @@ export default function index() {
   const DayButton = () => {
     return (
       <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-        <Card style={[styles.dayButton, { backgroundColor: selectedDayButtonResponse === 1 ? "green" : "#fff" }]} onPress={() => { setSelectedDayButtonResponse(1) }}>
+        <Card style={[styles.dayButton, { backgroundColor: selectedDayButtonResponse === 1 ? AppStyles.primary : "#fff" }]} onPress={() => { setSelectedDayButtonResponse(1) }}>
           <Text style={{ alignSelf: 'center', color: selectedDayButtonResponse === 1 ? "#fff" : "#000" }}>Today</Text>
         </Card>
-        <Card style={[styles.dayButton, { backgroundColor: selectedDayButtonResponse === 2 ? "green" : "#fff" }]} onPress={() => { setSelectedDayButtonResponse(2) }}>
+        <Card style={[styles.dayButton, { backgroundColor: selectedDayButtonResponse === 2 ? AppStyles.primary : "#fff" }]} onPress={() => { setSelectedDayButtonResponse(2) }}>
           <Text style={{ alignSelf: 'center', color: selectedDayButtonResponse === 2 ? "#fff" : "#000" }}>Tommorrow</Text>
         </Card>
       </View>
@@ -69,7 +78,7 @@ export default function index() {
           padding: 5,
           margin: 5,
           borderColor:
-            item.id === selectedProductResponse ? "green" : "#fff",
+            item.id === selectedProductResponse ? AppStyles.primary : "#fff",
           borderWidth: 1,
         }}
         onPress={() => { setSelectedProductResponse(item.id) }}
@@ -98,7 +107,7 @@ export default function index() {
               <View style={{ flex: 1 }}>
                 <IconButton
                   icon="minus"
-                  iconColor={"green"}
+                  iconColor={AppStyles.primary}
                   backgroundColor="#fff"
                   size={20}
                   style={{ width: 30, height: 30, borderRadius: 5, flex: 1 }}
@@ -106,12 +115,12 @@ export default function index() {
                     setSelectedProductResponse(item.id)
                     item.qty === 1 ?
                     Alert.alert(
-                      "Are you sure",
-                      "Do you want to remove this item from cart",
+                      "Remove Item",
+                      "Are you sure you want to remove this item?",
                       [
           
-                          { text: "Remove", onPress: () =>   remove_from_cart(item) },
-                          { text: "Cancel", onPress: () => {} }
+                        { text: "Cancel", onPress: () => {} },
+                        { text: "Remove", onPress: () =>   remove_from_cart(item) }
                       ]
                   )
                   
@@ -124,7 +133,7 @@ export default function index() {
               <View style={{ flex: 0 }}>
                 <IconButton
                   icon="plus"
-                  iconColor={"green"}
+                  iconColor={AppStyles.primary}
                   backgroundColor="#fff"
                   size={20}
                   style={{ width: 30, height: 30, borderRadius: 5 }}
@@ -163,7 +172,7 @@ export default function index() {
       <View>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ justifyContent: 'center' }}>
           {
-            dummyDB.rice.map((item, index) => {
+            recommended.map((item, index) => {
               const getItemFromCart = state.cart.find(obj => obj.id === item.id)
               return (
                 <View >
@@ -172,7 +181,7 @@ export default function index() {
                       backgroundColor: "#fff",
                       margin: 5,
                       borderColor:
-                        item.id === selectedCategoryResponse ? "green" : "#fff",
+                        item.id === selectedCategoryResponse ? AppStyles.primary : "#fff",
                       borderWidth: 1,
                     }}
                     onPress={() => { setSelectedCategoryResponse(item.id) }}
@@ -183,7 +192,7 @@ export default function index() {
                     />
                   </Card>
                   <Text style={{ alignSelf: 'center' }}>{item.item_name}</Text>
-                  <Text style={{ alignSelf: 'center', fontWeight: 'bold' }}>₹200</Text>
+                  <Text style={{ alignSelf: 'center', fontWeight: 'bold' }}>{item.sale_price}</Text>
                   <TouchableOpacity 
                   onPress={()=>{ 
                     setSelectedCategoryResponse(item.id)
@@ -191,7 +200,7 @@ export default function index() {
                     remove_from_cart(item):
                     add_to_cart(item) 
                   }}
-                  style={{ backgroundColor: "green", margin: 10, justifyContent: "center", padding: 3, borderRadius: 5 }}>
+                  style={{ backgroundColor: AppStyles.primary, margin: 10, justifyContent: "center", padding: 3, borderRadius: 5 }}>
                     <Text style={{ alignSelf: 'center', color: "#fff" }}>{getItemFromCart && getItemFromCart.id ? "Remove" : "Add"}</Text>
                   </TouchableOpacity>
                 </View>
@@ -214,7 +223,7 @@ export default function index() {
                   backgroundColor: "#fff",
                   padding: 15, margin: 5,
                   borderColor:
-                    item.id === selectedTimelineResponse ? "green" : "#fff",
+                    item.id === selectedTimelineResponse ? AppStyles.primary : "#fff",
                   borderWidth: 1,
                 }}
                 onPress={() => { setSelectedTimelineResponse(item.id) }}
@@ -282,12 +291,12 @@ export default function index() {
             onPress={() => {
               setChecked(!checked);
             }}
-            color={"green"}
+            color={AppStyles.primary}
             uncheckedColor={"#bababa"}
           />
           <Text style={{ fontSize: 16, color: "#bababa", width: "80%", left: 10 }}>By placing an order you agree to our <Text style={{ color: "#000" }}>Terms</Text> and <Text style={{ color: "#000" }}>Conditions</Text></Text>
         </View>
-        <Button labelStyle={{ color: "#000", fontSize: 18 }} style={{ backgroundColor: "#f0f0f0", borderRadius: 10, margin: 10, borderWidth: 1, borderColor: "green" }} contentStyle={{ padding: 10, }} mode="elevated" onPress={() => console.log('Pressed')}>
+        <Button labelStyle={{ color: "#000", fontSize: 18 }} style={{ backgroundColor: "#f0f0f0", borderRadius: 10, margin: 10, borderWidth: 1, borderColor: AppStyles.primary }} contentStyle={{ padding: 10, }} mode="elevated" onPress={() => console.log('Pressed')}>
           Proceed
         </Button>
       </View>
