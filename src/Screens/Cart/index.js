@@ -183,6 +183,7 @@ export default function index() {
                       borderColor:
                         item.id === selectedCategoryResponse ? AppStyles.primary : "#fff",
                       borderWidth: 1,
+                      left:5
                     }}
                     onPress={() => { setSelectedCategoryResponse(item.id) }}
                   >
@@ -221,7 +222,7 @@ export default function index() {
               <Card
                 style={{
                   backgroundColor: "#fff",
-                  padding: 15, margin: 5,
+                  padding: 10, margin: 3,
                   borderColor:
                     item.id === selectedTimelineResponse ? AppStyles.primary : "#fff",
                   borderWidth: 1,

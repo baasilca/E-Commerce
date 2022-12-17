@@ -158,7 +158,7 @@ const _drinks = [
     {
         id: "D1",
         item_name: "7up",
-        sale_price: "₹84/kg",
+        sale_price: "₹84/ltr",
         original_price: "₹99",
         offer_tag: "-15%",
         image: require('../assets/ProductImages/drinks1.png'),
@@ -168,7 +168,7 @@ const _drinks = [
     {
         id: "D2",
         item_name: "Thums up",
-        sale_price: "₹132/kg",
+        sale_price: "₹132/ltr",
         original_price: "₹160",
         offer_tag: "-17%",
         price_for_calculations: 132,
@@ -178,7 +178,7 @@ const _drinks = [
     {
         id: "D3",
         item_name: "Cocacola",
-        sale_price: "₹132/kg",
+        sale_price: "₹132/ltr",
         original_price: "₹160",
         offer_tag: "-17%",
         price_for_calculations: 132,
@@ -188,7 +188,7 @@ const _drinks = [
     {
         id: "D4",
         item_name: "Mirinda",
-        sale_price: "₹40/kg",
+        sale_price: "₹40/ltr",
         original_price: "₹40",
         offer_tag: "-0%",
         price_for_calculations: 40,

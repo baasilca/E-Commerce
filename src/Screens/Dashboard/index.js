@@ -52,8 +52,8 @@ export default function index(props) {
       <Card
         style={{
           backgroundColor: "#fff",
-          padding: 5,
           margin: 5,
+          padding: 5,
           borderColor:
             item.id === selectedProductResponse ? AppStyles.primary : "#fff",
           borderWidth: 1,
@@ -62,13 +62,13 @@ export default function index(props) {
       >
         <View style={{ flexDirection: 'row' }}>
           <View style={{}}>
-          <Image
-            source={item.image}
-            style={{ width: 100, height: 100, resizeMode: "contain", borderRadius: 10, }}
-          />
+            <Image
+              source={item.image}
+              style={{ width: 100, height: 100, resizeMode: "contain", borderRadius: 10, }}
+            />
           </View>
           <View style={{ left: 10 }}>
-            <Text style={{ fontSize: 16}}>{item.item_name}</Text>
+            <Text style={{ fontSize: 16 }}>{item.item_name}</Text>
             <View style={{ flexDirection: 'row' }}>
               <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{item.sale_price}</Text>
               {item.offer ?
@@ -151,7 +151,7 @@ export default function index(props) {
         title={"Store 1"}
         titleStyle={{ fontSize: 20, fontWeight: 'bold' }}
         description={"Lorem ipsum dolor sit amet, consectetur adipiscing elit."}
-        descriptionStyle={{ color: "#bababa", width: "60%" }}
+        descriptionStyle={{ color: "#bababa" }}
         left={(props) => (
           <Image
             source={require("../../../assets/ThemeImages/logo_mint.png")}
@@ -200,7 +200,7 @@ export default function index(props) {
               >
                 <Image
                   source={item.image}
-                  style={{ width: 75, height: 70, resizeMode: "contain", borderRadius: 10 }}
+                  style={{ width: 70, height: 70, resizeMode: "contain", borderRadius: 10 }}
                 />
                 <Text style={{ alignSelf: 'center', margin: 5 }}>{item.title}</Text>
               </Card>
@@ -212,10 +212,10 @@ export default function index(props) {
         data={listProducts}
         renderItem={renderProducts}
         keyExtractor={(item) => `${item.id}`}
-        contentContainerStyle={{paddingBottom:70}}
-        ListFooterComponent={()=>{
-          return(
-            <Text style={{alignSelf:'center',opacity:0.4}}>No more data</Text>
+        contentContainerStyle={{ paddingBottom: 70, margin: 5 }}
+        ListFooterComponent={() => {
+          return (
+            <Text style={{ alignSelf: 'center', opacity: 0.4 }}>No more data</Text>
           )
         }}
       />
@@ -231,8 +231,7 @@ export default function index(props) {
                 <Text style={{ color: "#fff", fontSize: 17 }}>{state.cart.length} Items</Text>
                 <Text style={{ color: "#fff", fontSize: 17 }}>₹{orderTotal}</Text>
               </View>
-
-              <Card onPress={() => { props.navigation.navigate("Cart") }} style={{ alignSelf: 'flex-end', backgroundColor: "#fff", borderRadius: 10 }}>
+              <TouchableOpacity onPress={() => { props.navigation.navigate("Cart") }} style={{ alignSelf: 'flex-end', backgroundColor: "#fff", borderRadius: 10 }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', padding: 2 }}>
                   <Text style={{ color: "#000", fontSize: 17, left: 10 }}>Checkout</Text>
                   <IconButton
@@ -242,32 +241,34 @@ export default function index(props) {
                     style={{ width: 60, height: 30, borderRadius: 30 }}
                   />
                 </View>
-              </Card>
+              </TouchableOpacity>
             </View>
           </View>
         </Animatable.View>
         :
-        <TouchableOpacity style={{
+        <View style={{
           position: 'absolute',
           bottom: 10,
           right: 10,
-        }}
-          onPress={() => {
-            props.navigation.navigate("Cart")
-          }}
-        >
-          <Animatable.View
-            animation='fadeInLeft'
-            duration={1500}>
-            <IconButton
-              icon="cart-outline"
-              iconColor={"white"}
-              backgroundColor={AppStyles.primary}
-              size={25}
-              style={{ width: 60, height: 60, borderRadius: 30 }}
-            />
-          </Animatable.View>
-        </TouchableOpacity>
+        }}>
+          <TouchableOpacity
+            onPress={() => {
+              props.navigation.navigate("Cart")
+            }}
+          >
+            <Animatable.View
+              animation='fadeInLeft'
+              duration={1500}>
+              <IconButton
+                icon="cart-outline"
+                iconColor={"white"}
+                backgroundColor={AppStyles.primary}
+                size={25}
+                style={{ width: 60, height: 60, borderRadius: 30 }}
+              />
+            </Animatable.View>
+          </TouchableOpacity>
+        </View>
       }
 
 

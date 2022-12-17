@@ -29,7 +29,7 @@ function App(props) {
   }
 
   useEffect(() => {
-    // AsyncStorage.removeItem("sessionData");
+    AsyncStorage.removeItem("sessionData");
     AsyncStorage.getItem('sessionData', (err, result) => {
       if (
         result &&
